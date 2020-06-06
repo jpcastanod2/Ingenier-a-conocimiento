@@ -1,0 +1,18 @@
+<grupo>
+  <nombre>Bluh</nombre>
+  <repositorio>https://github.com/Bluh</repositorio>
+	<miembros>
+	  <miembro>
+	    <nombre>Juan Pablo Castaño Duque</nombre>
+	    <codigo>201710048010</codigo>
+	    <grupo>031</grupo>
+	    <email>jpcastanod@eafit.edu.co</email>
+	  </miembro>
+	  <miembro>
+	    <nombre>Johanna Saraí Caicedo Mejia</nombre>
+	    <codigo>201710049010</codigo>
+	    <grupo>031</grupo>
+	    <email>jscaicedom@eafit.edu.co</email>
+	  </miembro>
+	</miembros>
+</grupo>

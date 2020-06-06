@@ -1,0 +1,65 @@
+#include <fcntl.h>
+#include <errno.h>
+#include <unistd.h>
+#include <sys/mman.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <semaphore.h>
+#include "../include/apc.h"
+#include <iostream>
+#include <cstdlib>
+#include <cstring>
+using namespace std;
+#define APC_ERROR_EXISTE 10000
+#define APC_ERROR_ARGUMENTO 100001
+#define APC_ERROR_DESCONOCIDO 100002
+int APC_Init(const char* nombreArea, size_t tamano){
+
+   if(tamano < 1000 || tamano > 1048576){
+     errno = APC_ERROR_ARGUMENTO ;
+     return -1;
+   }
+
+  int fd = shm_open(nombreArea, O_RDWR | O_CREAT | O_EXCL, 0660);
+  
+   if (fd < 0) {
+    if(errno == 17){
+      errno = APC_ERROR_EXISTE ; 
+    }
+    else if( errno == 22){
+      errno =  APC_ERROR_ARGUMENTO ;
+    }
+    else{
+      errno = APC_ERROR_DESCONOCIDO;
+    
+   
+  }
+    
+    return -1;
+ }
+
+  size_t tamanioTotal = tamano + sizeof(struct Area_t);
+  int enterosBuffer = tamano / sizeof(int);
+   if (ftruncate(fd,tamanioTotal) != 0) {
+    cerr << "Error creando la memoria compartida: "
+	 << errno << strerror(errno) << endl;
+  }
+   
+void *dir;
+   if ((dir = mmap(NULL, sizeof(struct Area_t), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0)) == MAP_FAILED) {
+    cerr << "Error mapeando la memoria compartida: "
+	 << errno << strerror(errno) << endl;
+  }
+
+   struct Area_t *area = (struct Area_t*) dir;   
+   struct ConexionSeccion_t conexion;
+   conexion.elementosBuffer = new int[enterosBuffer];
+   area->conexion = conexion;
+   close(fd);
+   return 0;
+  }
+
+int main(){
+  cout <<  APC_Init ("ok12232",30000)<< endl;
+  return 0;
+}

@@ -1,0 +1,66 @@
+#include <fcntl.h>
+#include <errno.h>
+#include <unistd.h>
+#include <sys/mman.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <semaphore.h>
+#include "../include/apc.h"
+#include <iostream>
+#include <cstdlib>
+#include <cstring>
+using namespace std;
+
+
+int APC_ActivarSeccion (const char* nombreArea,const char* nomSeccion, size_t tamanoSeccion){
+ 
+  int fd = shm_open(nombreArea, O_RDWR  | O_EXCL, 0660);
+  if (fd < 0){
+    if (errno == 2) {
+      errno = APC_ERROR_NOEXISTE;
+    }
+    else if (errno == 22) {
+      errno = APC_ERROR_ARGUMENTO;
+    }
+    else{
+      errno = APC_ERROR_DESCONOCIDO;
+    }
+    return -1;
+  }
+
+  void *dir;
+   if ((dir = mmap(NULL, tamanoSeccion, PROT_READ | PROT_WRITE, MAP_SH\
+ARED, fd, 0)) == MAP_FAILED) {
+    cerr << "Error mapeando la memoria compartida: "
+         << errno << strerror(errno) << endl;
+  }
+   
+   int a [5];
+   cout << a[1] << endl;
+   struct Area_t *area = (struct Area_t *) dir;
+   SeccionAdministrativa_t area2;
+   int contador = 0;
+   bool seccionDisp = false;
+   while (contador < NSection){;
+     if (area2.estadosSecciones[contador] == 0){
+       seccionDisp = true;
+       area2.estadosSecciones[contador] = 1;
+       contador++;
+       cout << contador << endl;
+       break;
+				
+     }
+     contador ++;
+   }
+  
+  return 0;
+}
+
+int main (){
+  APC_ActivarSeccion ("123x123","12",  12);
+  APC_ActivarSeccion ("123x123","212", 312);
+  APC_ActivarSeccion ("123x123","212", 312);
+
+
+  return 0;
+}
