@@ -5,7 +5,7 @@ import numpy as np
 direcionBD = fd.askopenfilename()
 direcionBD
 
-BD = pd.read_excel(direcionBD)
+BD = pd.read_excel(direcionBD)asd
 BD.head()
 
 BD.shape
